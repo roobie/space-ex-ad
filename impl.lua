@@ -4,6 +4,7 @@ local devui = require'devui'
 
 local shaderPaths = {
   chromaticAbberation = 'shaders/chromatic-abberation/material.fsh',
+  lensflareConcentric = 'shaders/lensflare-concentric/material.fsh',
 }
 local shaders = {}
 local loadShaders = function()
@@ -57,13 +58,13 @@ function mod.draw()
   local clearColor = game.ui.clearColor
   love.graphics.clear(clearColor[1], clearColor[2], clearColor[3])
 
-  local shader = shaders.chromaticAbberation
+  local shader = shaders.lensflareConcentric
   love.graphics.setShader(shader)
 
   strength = math.sin(time * 2)
-  shader:send("abberationVector", {
-                strength*math.sin(time * 7) / 200,
-                strength*math.cos(time * 7) / 200})
+  --shader:send("abberationVector", {
+                --strength*math.sin(time * 7) / 200,
+                --strength*math.cos(time * 7) / 200})
   love.graphics.setColor(0.3, 0.5, 0.2, 0.4)
   love.graphics.polygon('fill', 100, 100, 200, 100, 150, 200)
 
