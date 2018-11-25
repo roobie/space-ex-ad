@@ -54,28 +54,25 @@ end
 
 function mod.draw()
   local time = love.timer.getTime()
+  local width, height = love.graphics.getDimensions( )
 
   local clearColor = game.ui.clearColor
   love.graphics.clear(clearColor[1], clearColor[2], clearColor[3])
 
-  local shader = shaders.lensflareConcentric
+  love.graphics.setColor(0.3, 0.5, 0.2, 0.4)
+  love.graphics.rectangle('fill', 50, 50, 50, 50)
+  love.graphics.rectangle('fill', width - 100, 50, 50, 50)
+  love.graphics.rectangle('fill', 50, height - 100, 50, 50)
+  love.graphics.rectangle('fill', width - 100, height - 100, 50, 50)
+  local shader = shaders.chromaticAbberation
   love.graphics.setShader(shader)
 
-  strength = math.sin(time * 2)
-  --shader:send("abberationVector", {
-                --strength*math.sin(time * 7) / 200,
-                --strength*math.cos(time * 7) / 200})
-  love.graphics.setColor(0.3, 0.5, 0.2, 0.4)
-  love.graphics.polygon('fill', 100, 100, 200, 100, 150, 200)
-
-  love.graphics.setColor(0.3, 1, 0.2, 0.4)
-  love.graphics.polygon('fill', 200, 200, 300, 200, 250, 300)
-
-  love.graphics.setColor(0.3, 1, 0.2, 0.4)
-  love.graphics.ellipse('fill', 500, 10, 50, 100)
+  strength = math.sin(time *100)
+  shader:send("abberationVector", {strength*math.sin(time * 7) / 200, strength*math.cos(time * 7) / 200})
 
   -- love.graphics.draw( drawable, x, y, r, sx, sy, ox, oy, kx, ky )
-  love.graphics.draw(sprites.dude, 250, 250, 0.1, 2, 2)
+  -- love.graphics.draw(sprites.dude, 250, 250, math.sin(time), 3, 3, 32, 32, math.cos(time) / 5, math.sin(time) / 3)
+  love.graphics.draw(sprites.dude, 250, 250, 0, 13, 13, 32, 32, 0, 0)
   love.graphics.setShader()
 
   love.graphics.setColor(1, 1, 1, 1)
