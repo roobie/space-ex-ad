@@ -1,68 +1,29 @@
 require'imgui'
 
 local devui = require'devui'
+local impl = require'impl'
 
-local shaderPaths = {
-  chromaticAbberation = 'shaders/chromatic-abberation.fsh',
-}
-local shaders = {}
-
-local loadShaders = function()
-  for name, path in pairs(shaderPaths) do
-    local shader = love.graphics.newShader(path)
-    print(shader:getWarnings())
-    shaders[name] = shader
+local function reload()
+  local _require = _G.require
+  _G.require = function(name)
+    package.loaded[name] = nil
+    return _require(name)
   end
+  impl = require'impl'
+  impl.load()
+  _G.require = _require
 end
 
-local sprite = nil
-
-local game = {
-  world = {
-    entities = {}
-  },
-  ui = {
-    clearColor = {0.9, 0.9, 0.9}
-  }
-}
-
 function love.load(arg)
-  loadShaders()
-  sprite = love.graphics.newImage('sprites/dude1.png')
+  impl.load()
 end
 
 function love.update(dt)
-  devui.update(dt)
-
-  imgui.NewFrame()
+  impl.update(dt)
 end
 
 function love.draw()
-
-  local clearColor = game.ui.clearColor
-  love.graphics.clear(clearColor[1], clearColor[2], clearColor[3])
-
-  local shader = shaders.chromaticAbberation
-  love.graphics.setShader(shader)
-  shader:send('abberationVector', {0.1, 0.1})
-
-  strength = 1--math.sin(love.timer.getTime()*2)
-  shader:send("abberationVector", {
-                strength*math.sin(love.timer.getTime()*7)/200,
-                strength*math.cos(love.timer.getTime()*7)/200})
-  --love.graphics.setColor(0.3, 0.5, 0.2, 0.4)
-  --love.graphics.polygon('fill', 100, 100, 200, 100, 150, 200)
-
-  --love.graphics.setColor(0.3, 1, 0.2, 0.4)
-  --love.graphics.polygon('fill', 200, 200, 300, 200, 250, 300)
-
-  -- love.graphics.draw( drawable, x, y, r, sx, sy, ox, oy, kx, ky )
-  love.graphics.draw(sprite, 250, 250, 0.1, 2, 2)
-  love.graphics.setShader()
-
-  love.graphics.setColor(1, 1, 1, 1)
-  devui.draw()
-  imgui.Render();
+  impl.draw()
 end
 
 function love.quit()
@@ -76,10 +37,13 @@ function love.textinput(t)
   end
 end
 
-function love.keypressed(key)
+function love.keypressed(key, scancode, isrepeat)
   imgui.KeyPressed(key)
   if not imgui.GetWantCaptureKeyboard() then
     -- Pass event to the game
+    if key == 'r' then
+      reload()
+    end
   end
 end
 

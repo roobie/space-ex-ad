@@ -24,7 +24,7 @@ function mod.draw()
     showTestWindow = not showTestWindow;
   end
 
-  imgui.Text(string.format('%.4f - %.4f', delta, 1 / delta))
+  imgui.Text(string.format('%.4f - %.4f', love.timer.getAverageDelta(), love.timer.getFPS()))
 
   if showTestWindow then
     showTestWindow = imgui.ShowDemoWindow(true)
