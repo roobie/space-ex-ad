@@ -68,7 +68,7 @@ function mod.draw()
   love.graphics.setShader(shader)
 
   strength = math.sin(time *100)
-  shader:send("abberationVector", {strength*math.sin(time * 7) / 200, strength*math.cos(time * 7) / 200})
+  shader:send('abberationVector', {strength*math.sin(time * 7) / 200, strength*math.cos(time * 7) / 200})
 
   -- love.graphics.draw( drawable, x, y, r, sx, sy, ox, oy, kx, ky )
   -- love.graphics.draw(sprites.dude, 250, 250, math.sin(time), 3, 3, 32, 32, math.cos(time) / 5, math.sin(time) / 3)
